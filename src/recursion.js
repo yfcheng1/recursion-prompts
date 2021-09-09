@@ -162,13 +162,6 @@ var palindrome = function (string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function (x, y) {
-  if (x === 0 && y === 0) {
-    return NaN;
-  }
-  if (x === 0) {
-    return 0;
-  }
-  if ()
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
@@ -217,17 +210,48 @@ var buildList = function (value, length) {
 // For numbers which are multiples of both three and five, output “FizzBuzz” instead of the number.
 // fizzBuzz(5) // ['1','2','Fizz','4','Buzz']
 var fizzBuzz = function (n) {
+  if (n < 1) {
+    return [];
+  }
+  var arr = [];
+  if (n % 3 === 0 && n % 5 === 0) {
+    arr.push('FizzBuzz');
+  } else if (n % 3 === 0) {
+    arr.push('Fizz');
+  } else if (n % 5 === 0) {
+    arr.push('Buzz');
+  } else {
+    arr.push(n.toString());
+  }
+  return (fizzBuzz(n - 1)).concat(arr);
 };
 
 // 20. Count the occurrence of a value in a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
 var countOccurrence = function (array, value) {
+  var num = 0;
+  if (array.length === 0) {
+    return 0;
+  }
+  if (array[0] === value) {
+    num++;
+  }
+  var arr = array.slice(1);
+  return num += countOccurrence(arr, value);
 };
 
 // 21. Write a recursive version of map.
 // rMap([1,2,3], timesTwo); // [2,4,6]
 var rMap = function (array, callback) {
+  var arr = [];
+  if (array.length === 0) {
+    return [];
+  }
+  var newarr = array.slice();
+  arr.push(callback(newarr[0]));
+  newarr.shift();
+  return arr.concat(rMap(newarr, callback));
 };
 
 // 22. Write a function that counts the number of times a key occurs in an object.
@@ -235,6 +259,17 @@ var rMap = function (array, callback) {
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
 var countKeysInObj = function (obj, key) {
+  var num = 0;
+  for (var prop in obj) {
+    if (prop === key) {
+      num++;
+    }
+    var value = obj[prop];
+    if (typeof value === 'object') {
+      num += countKeysInObj(value, key);
+    }
+  }
+  return num;
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
@@ -242,11 +277,33 @@ var countKeysInObj = function (obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function (obj, value) {
+  var num = 0;
+  for (var prop in obj) {
+    if (obj[prop] === value) {
+      num++;
+    }
+    var subobj = obj[prop];
+    if (typeof subobj === 'object') {
+      num += countValuesInObj(subobj, value);
+    }
+  }
+  return num;
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function (obj, oldKey, newKey) {
+  for (var key in obj) {
+    if (key === oldKey) {
+      obj[newKey] = obj[key];
+      delete obj[oldKey];
+    }
+    var subobj = obj[key];
+    if (typeof subobj === 'object') {
+      replaceKeysInObj(subobj, oldKey, newKey);
+    }
+  }
+  return obj;
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
